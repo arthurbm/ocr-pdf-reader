@@ -1,125 +1,125 @@
-# Arquitetura do OCR PDF Reader
+# OCR PDF Reader Architecture
 
-## Visão Geral
+## Overview
 
-O OCR PDF Reader foi estruturado seguindo princípios de código limpo e arquitetura modular, separando responsabilidades em módulos distintos para facilitar manutenção, testes e extensibilidade.
+The OCR PDF Reader was structured following clean code principles and modular architecture, separating responsibilities into distinct modules to facilitate maintenance, testing, and extensibility.
 
-## Estrutura de Módulos
+## Module Structure
 
 ### 📦 `src/ocr_pdf_reader/`
 
 #### `__init__.py`
-- **Função**: Ponto de entrada do pacote
-- **Responsabilidades**:
-  - Definir metadata do projeto (versão, autor, descrição)
-  - Exportar APIs públicas principais
-  - Configurar importações para facilitar uso
+- **Function**: Package entry point
+- **Responsibilities**:
+  - Define project metadata (version, author, description)
+  - Export main public APIs
+  - Configure imports to facilitate usage
 
 #### `core.py`
-- **Função**: Módulo principal que orquestra todo o processo
-- **Responsabilidades**:
-  - Integrar funcionalidades dos outros módulos
-  - Implementar função principal `extract_text_from_pdf()`
-  - Função de conveniência `extract_and_save()`
-  - Gerenciar fluxo principal do processamento
+- **Function**: Main module that orchestrates the entire process
+- **Responsibilities**:
+  - Integrate functionalities from other modules
+  - Implement main function `extract_text_from_pdf()`
+  - Convenience function `extract_and_save()`
+  - Manage main processing flow
 
 #### `image_processor.py`
-- **Função**: Processamento de imagens e OCR
-- **Responsabilidades**:
-  - Extrair imagens de arquivos PDF
-  - Pré-processar imagens (threshold, remoção de ruído)
-  - Aplicar OCR usando Tesseract
-  - Verificar instalação do Tesseract
+- **Function**: Image processing and OCR
+- **Responsibilities**:
+  - Extract images from PDF files
+  - Preprocess images (threshold, noise removal)
+  - Apply OCR using Tesseract
+  - Check Tesseract installation
 
 #### `text_processor.py`
-- **Função**: Processamento e limpeza de texto
-- **Responsabilidades**:
-  - Processar texto bruto do OCR
-  - Aplicar regex para extrair conteúdo relevante
-  - Remover códigos numéricos e manter descrições
-  - Validar e filtrar linhas extraídas
-  - Lidar com linhas quebradas
+- **Function**: Text processing and cleaning
+- **Responsibilities**:
+  - Process raw OCR text
+  - Apply regex to extract relevant content
+  - Remove numeric codes and keep descriptions
+  - Validate and filter extracted lines
+  - Handle broken lines
 
 #### `cli.py`
-- **Função**: Interface de linha de comando
-- **Responsabilidades**:
-  - Parsing de argumentos de linha de comando
-  - Modo interativo e modo CLI
-  - Exibir help e versão
-  - Tratamento de erros de usuário
+- **Function**: Command line interface
+- **Responsibilities**:
+  - Command line argument parsing
+  - Interactive mode and CLI mode
+  - Display help and version
+  - Handle user errors
 
 #### `__main__.py`
-- **Função**: Ponto de entrada para execução como módulo
-- **Responsabilidades**:
-  - Permitir execução com `python -m ocr_pdf_reader`
-  - Delegar para CLI ou modo interativo
+- **Function**: Entry point for module execution
+- **Responsibilities**:
+  - Allow execution with `python -m ocr_pdf_reader`
+  - Delegate to CLI or interactive mode
 
 ### 🧪 `tests/`
 
 #### `test_text_processor.py`
-- **Função**: Testes unitários para processamento de texto
-- **Cobertura**:
-  - Teste de diferentes formatos de entrada
-  - Validação de manutenção de siglas
-  - Remoção de duplicatas
-  - Validação de linhas
+- **Function**: Unit tests for text processing
+- **Coverage**:
+  - Test different input formats
+  - Validation of acronym maintenance
+  - Duplicate removal
+  - Line validation
 
 ### 📚 `examples/`
 
 #### `example.py`
-- **Função**: Demonstrar uso programático da biblioteca
-- **Conteúdo**: Exemplos práticos de como usar as APIs
+- **Function**: Demonstrate programmatic library usage
+- **Content**: Practical examples of how to use the APIs
 
 ### ⚙️ `config/`
 
 #### `settings.py`
-- **Função**: Configurações centralizadas
-- **Conteúdo**:
-  - Parâmetros de OCR
-  - Configurações de processamento
-  - Padrões de regex
-  - Configurações de logging
+- **Function**: Centralized configurations
+- **Content**:
+  - OCR parameters
+  - Processing settings
+  - Regex patterns
+  - Logging configurations
 
-## Fluxo de Dados
+## Data Flow
 
 ```mermaid
 graph TD
     A[PDF Input] --> B[image_processor.extract_images_from_pdf]
-    B --> C[Lista de Imagens PIL]
+    B --> C[List of PIL Images]
     C --> D[image_processor.extract_text_from_image]
-    D --> E[Texto Bruto OCR]
+    D --> E[Raw OCR Text]
     E --> F[text_processor.process_text_lines]
-    F --> G[Lista de Linhas Processadas]
+    F --> G[List of Processed Lines]
     G --> H[text_processor.validate_extracted_lines]
-    H --> I[Resultado Final]
+    H --> I[Final Result]
 ```
 
-## Princípios de Design
+## Design Principles
 
-### 1. **Separação de Responsabilidades**
-- Cada módulo tem uma responsabilidade específica
-- Interfaces bem definidas entre módulos
-- Baixo acoplamento, alta coesão
+### 1. **Separation of Concerns**
+- Each module has a specific responsibility
+- Well-defined interfaces between modules
+- Low coupling, high cohesion
 
-### 2. **Facilidade de Teste**
-- Funções pequenas e focadas
-- Dependências injetáveis
-- Testes unitários para funcionalidades críticas
+### 2. **Testability**
+- Small and focused functions
+- Injectable dependencies
+- Unit tests for critical functionalities
 
-### 3. **Extensibilidade**
-- Configurações centralizadas
-- Padrões de regex configuráveis
-- Suporte a múltiplos idiomas
+### 3. **Extensibility**
+- Centralized configurations
+- Configurable regex patterns
+- Support for multiple languages
 
-### 4. **Usabilidade**
-- Múltiplas interfaces (CLI, programática, interativa)
-- Mensagens informativas
-- Tratamento gracioso de erros
+### 4. **Usability**
+- Multiple interfaces (CLI, programmatic, interactive)
+- Informative messages
+- Graceful error handling
 
-## Configuração e Personalização
+## Configuration and Customization
 
-### Padrões de Regex
-O módulo `text_processor` usa padrões regex configuráveis para diferentes formatos:
+### Regex Patterns
+The `text_processor` module uses configurable regex patterns for different formats:
 
 ```python
 REGEX_PATTERNS = {
@@ -129,71 +129,71 @@ REGEX_PATTERNS = {
 }
 ```
 
-### Configurações de OCR
-Parâmetros do Tesseract são configuráveis:
+### OCR Settings
+Tesseract parameters are configurable:
 
 ```python
 OCR_CONFIG = {
-    'default_language': 'por',
+    'default_language': 'eng',
     'custom_config': r'--oem 3 --psm 6',
-    'supported_languages': ['por', 'eng', 'spa', 'fra', 'deu'],
+    'supported_languages': ['eng', 'por', 'spa', 'fra', 'deu'],
 }
 ```
 
-## Compatibilidade
+## Compatibility
 
-### Versões Python
+### Python Versions
 - Python 3.9+
-- Compatível com UV e pip
+- Compatible with UV and pip
 
-### Dependências Principais
-- PyMuPDF: Manipulação de PDFs
-- Pytesseract: Interface Python para Tesseract
-- Pillow: Processamento de imagens
-- OpenCV: Pré-processamento avançado de imagens
+### Main Dependencies
+- PyMuPDF: PDF manipulation
+- Pytesseract: Python interface for Tesseract
+- Pillow: Image processing
+- OpenCV: Advanced image preprocessing
 
-## Pontos de Entrada
+## Entry Points
 
-### 1. Script de Compatibilidade
+### 1. Compatibility Script
 ```bash
 python main.py
 ```
 
-### 2. Módulo Python
+### 2. Python Module
 ```bash
-python -m ocr_pdf_reader arquivo.pdf
+python -m ocr_pdf_reader file.pdf
 ```
 
-### 3. Uso Programático
+### 3. Programmatic Usage
 ```python
 from ocr_pdf_reader import extract_text_from_pdf
-result = extract_text_from_pdf("arquivo.pdf")
+result = extract_text_from_pdf("file.pdf")
 ```
 
-### 4. CLI com UV
+### 4. CLI with UV
 ```bash
-uv run python -m ocr_pdf_reader arquivo.pdf -o resultado.txt
+uv run python -m ocr_pdf_reader file.pdf -o result.txt
 ```
 
-## Futuras Extensões
+## Future Extensions
 
-A arquitetura modular permite facilmente:
+The modular architecture easily allows:
 
-1. **Novos Processadores de Imagem**: Adicionar algoritmos de pré-processamento
-2. **Novos Formatos de Entrada**: Suporte a outros tipos de arquivo
-3. **Processadores de Texto Personalizados**: Regex patterns específicos
-4. **Backends de OCR Alternativos**: Além do Tesseract
-5. **Saídas Estruturadas**: JSON, XML, etc.
-6. **Interface Web**: Flask/FastAPI wrapper
-7. **Interface Gráfica**: Tkinter ou Qt
+1. **New Image Processors**: Add preprocessing algorithms
+2. **New Input Formats**: Support for other file types
+3. **Custom Text Processors**: Specific regex patterns
+4. **Alternative OCR Backends**: Beyond Tesseract
+5. **Structured Outputs**: JSON, XML, etc.
+6. **Web Interface**: Flask/FastAPI wrapper
+7. **Graphical Interface**: Tkinter or Qt
 
-## Melhores Práticas Implementadas
+## Implemented Best Practices
 
-- ✅ **Type Hints**: Todas as funções têm anotações de tipo
-- ✅ **Docstrings**: Documentação completa de funções
-- ✅ **Error Handling**: Tratamento robusto de erros
-- ✅ **Logging**: Sistema de logs configurável
-- ✅ **Configuração**: Parâmetros externalizados
-- ✅ **Testabilidade**: Código facilmente testável
-- ✅ **PEP 8**: Seguindo padrões Python
-- ✅ **Backward Compatibility**: Script legado mantido 
+- ✅ **Type Hints**: All functions have type annotations
+- ✅ **Docstrings**: Complete function documentation
+- ✅ **Error Handling**: Robust error handling
+- ✅ **Logging**: Configurable logging system
+- ✅ **Configuration**: Externalized parameters
+- ✅ **Testability**: Easily testable code
+- ✅ **PEP 8**: Following Python standards
+- ✅ **Backward Compatibility**: Legacy script maintained 

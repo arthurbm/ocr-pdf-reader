@@ -1,236 +1,236 @@
 # OCR PDF Reader
 
-Um script Python para extrair texto de arquivos PDF que contêm imagens usando OCR (Optical Character Recognition).
+A Python script to extract text from PDF files containing images using OCR (Optical Character Recognition).
 
-## Funcionalidades
+## Features
 
-- ✅ Extrai imagens de arquivos PDF
-- ✅ Aplica OCR para converter imagens em texto
-- ✅ Processa texto para remover números e manter apenas o conteúdo após "-"
-- ✅ Remove caracteres não-alfabéticos no final das linhas automaticamente
-- ✅ Suporte a português (configurável para outros idiomas)
-- ✅ Pré-processamento de imagens para melhor qualidade do OCR
-- ✅ Retorna array de strings com o texto extraído
+- ✅ Extract images from PDF files
+- ✅ Apply OCR to convert images to text
+- ✅ Process text to remove numbers and keep only content after "-"
+- ✅ Automatically remove non-alphabetic characters at end of lines
+- ✅ Support for English (configurable for other languages)
+- ✅ Image preprocessing for better OCR quality
+- ✅ Returns array of strings with extracted text
 
-## Pré-requisitos
+## Prerequisites
 
 ### 1. Tesseract OCR
 
 **Ubuntu/Debian:**
 ```bash
 sudo apt update
-sudo apt install tesseract-ocr tesseract-ocr-por
+sudo apt install tesseract-ocr tesseract-ocr-eng
 ```
 
 **Windows:**
-- Baixe de: https://github.com/UB-Mannheim/tesseract/wiki
+- Download from: https://github.com/UB-Mannheim/tesseract/wiki
 
 **macOS:**
 ```bash
 brew install tesseract
 ```
 
-### 2. Dependências Python
+### 2. Python Dependencies
 
-As dependências já estão configuradas no projeto. Execute:
+Dependencies are already configured in the project. Run:
 
 ```bash
 uv sync
 ```
 
-## Como usar
+## How to Use
 
-### 1. Como pacote Python (Recomendado)
+### 1. As Python Package (Recommended)
 
 ```bash
-# Instalar as dependências
+# Install dependencies
 uv sync
 
-# Usar via linha de comando
-uv run python -m ocr_pdf_reader arquivo.pdf
-uv run python -m ocr_pdf_reader arquivo.pdf -o resultado.txt --lang por
+# Use via command line
+uv run python -m ocr_pdf_reader file.pdf
+uv run python -m ocr_pdf_reader file.pdf -o result.txt --lang eng
 ```
 
-### 2. Modo Interativo
+### 2. Interactive Mode
 
 ```bash
-# Script de compatibilidade
+# Compatibility script
 python main.py
 
-# Ou como módulo
+# Or as module
 uv run python -m ocr_pdf_reader
 ```
 
-### 3. Modo Programático
+### 3. Programmatic Mode
 
 ```python
 from ocr_pdf_reader import extract_text_from_pdf
 
-# Extrai texto do PDF
-linhas_texto = extract_text_from_pdf("seu_arquivo.pdf", lang='por')
+# Extract text from PDF
+text_lines = extract_text_from_pdf("your_file.pdf", lang='eng')
 
-# O resultado é uma lista de strings
-for linha in linhas_texto:
-    print(linha)
+# Result is a list of strings
+for line in text_lines:
+    print(line)
 ```
 
-### 4. Usando módulos específicos
+### 4. Using Specific Modules
 
 ```python
 from ocr_pdf_reader.core import extract_and_save
 from ocr_pdf_reader.text_processor import process_text_lines
 from ocr_pdf_reader.image_processor import extract_images_from_pdf
 
-# Extrai e salva diretamente
-linhas = extract_and_save("seu_arquivo.pdf", "resultado.txt")
+# Extract and save directly
+lines = extract_and_save("your_file.pdf", "result.txt")
 ```
 
-### Exemplo Completo
+### Complete Example
 
-Veja o arquivo `example.py` para um exemplo detalhado de uso.
+See the `example.py` file for a detailed usage example.
 
-### Testando a Funcionalidade
+### Testing Functionality
 
-Para testar o processamento de linhas quebradas:
+To test broken line processing:
 
 ```bash
 python test_line_breaking.py
 ```
 
-## Formato de Entrada Esperado
+## Expected Input Format
 
-O script processa PDFs onde cada linha de texto segue padrões como:
+The script processes PDFs where each text line follows patterns like:
 
-**Formato simples:**
+**Simple format:**
 ```
-1 - Primeiro item de texto
-2 - Segundo item de texto
-10 - Décimo item de texto
-```
-
-**Formato com códigos (como no seu exemplo):**
-```
-11.01.39 - INSTITUTO DE ESTUDOS DA AFRICA - GR
-11.01.42 - COORDENAÇÃO ADMINISTRATIVA - GR
-11.01.55 - DIVISÃO DE ANÁLISE DE PROCESSOS - GR
+1 - First text item
+2 - Second text item
+10 - Tenth text item
 ```
 
-O script extrairá apenas o texto relevante:
+**Format with codes (like in your example):**
 ```
-INSTITUTO DE ESTUDOS DA AFRICA
-COORDENAÇÃO ADMINISTRATIVA
-DIVISÃO DE ANÁLISE DE PROCESSOS
-```
-
-### ✨ Tratamento de Linhas Quebradas
-
-O script agora lida inteligentemente com linhas quebradas pelo OCR:
-
-**Entrada (com linhas quebradas):**
-```
-1 - Este é um texto muito longo que foi
-quebrado em múltiplas linhas pelo OCR
-2 - Segundo item também pode estar
-quebrado em várias linhas
+11.01.39 - INSTITUTE OF AFRICAN STUDIES - GR
+11.01.42 - ADMINISTRATIVE COORDINATION - GR
+11.01.55 - PROCESS ANALYSIS DIVISION - GR
 ```
 
-**Saída (linhas unificadas):**
+The script will extract only the relevant text:
 ```
-Este é um texto muito longo que foi quebrado em múltiplas linhas pelo OCR
-Segundo item também pode estar quebrado em várias linhas
-```
-
-### 🧹 Limpeza Automática de Caracteres
-
-O script remove automaticamente caracteres não-alfabéticos no final das linhas:
-
-**Entrada (com caracteres problemáticos):**
-```
-11.01.39 - INSTITUTO DE ESTUDOS DA AFRICA - GR]
-11.01.42 - COORDENAÇÃO ADMINISTRATIVA - GR1
-11.01.55 - DIVISÃO DE PROTOCOLO - CCsA)
+INSTITUTE OF AFRICAN STUDIES
+ADMINISTRATIVE COORDINATION
+PROCESS ANALYSIS DIVISION
 ```
 
-**Saída (caracteres removidos):**
+### ✨ Broken Line Handling
+
+The script now intelligently handles lines broken by OCR:
+
+**Input (with broken lines):**
 ```
-INSTITUTO DE ESTUDOS DA AFRICA - GR
-COORDENAÇÃO ADMINISTRATIVA - GR
-DIVISÃO DE PROTOCOLO - CCsA
+1 - This is a very long text that was
+broken into multiple lines by OCR
+2 - Second item can also be
+broken into several lines
 ```
 
-## Estrutura do Projeto
+**Output (unified lines):**
+```
+This is a very long text that was broken into multiple lines by OCR
+Second item can also be broken into several lines
+```
+
+### 🧹 Automatic Character Cleaning
+
+The script automatically removes non-alphabetic characters at the end of lines:
+
+**Input (with problematic characters):**
+```
+11.01.39 - INSTITUTE OF AFRICAN STUDIES - GR]
+11.01.42 - ADMINISTRATIVE COORDINATION - GR1
+11.01.55 - PROTOCOL DIVISION - CCsA)
+```
+
+**Output (characters removed):**
+```
+INSTITUTE OF AFRICAN STUDIES - GR
+ADMINISTRATIVE COORDINATION - GR
+PROTOCOL DIVISION - CCsA
+```
+
+## Project Structure
 
 ```
 ocr-pdf-reader/
 ├── src/
-│   └── ocr_pdf_reader/          # Pacote principal
-│       ├── __init__.py          # Inicialização do pacote
-│       ├── __main__.py          # Ponto de entrada principal
-│       ├── core.py              # Funções principais
-│       ├── cli.py               # Interface de linha de comando
-│       ├── image_processor.py   # Processamento de imagens
-│       └── text_processor.py    # Processamento de texto
-├── tests/                       # Testes unitários
+│   └── ocr_pdf_reader/          # Main package
+│       ├── __init__.py          # Package initialization
+│       ├── __main__.py          # Main entry point
+│       ├── core.py              # Main functions
+│       ├── cli.py               # Command line interface
+│       ├── image_processor.py   # Image processing
+│       └── text_processor.py    # Text processing
+├── tests/                       # Unit tests
 │   ├── __init__.py
 │   ├── test_text_processor.py
 │   ├── test_line_breaking.py
 │   └── test_real_format.py
-├── examples/                    # Exemplos de uso
+├── examples/                    # Usage examples
 │   └── example.py
-├── config/                      # Configurações
+├── config/                      # Configurations
 │   └── settings.py
-├── docs/                        # Documentação adicional
-├── main.py                      # Script de compatibilidade
-├── pyproject.toml              # Configuração do projeto
-├── README.md                   # Documentação
-└── texto_extraido.txt          # Arquivo de saída (gerado automaticamente)
+├── docs/                        # Additional documentation
+├── main.py                      # Compatibility script
+├── pyproject.toml              # Project configuration
+├── README.md                   # Documentation
+└── extracted_text.txt          # Output file (generated automatically)
 ```
 
-## Funções Principais
+## Main Functions
 
-### `extract_text_from_pdf(pdf_path, lang='por')`
+### `extract_text_from_pdf(pdf_path, lang='eng')`
 
-Função principal que extrai texto de um PDF.
+Main function that extracts text from a PDF.
 
-**Parâmetros:**
-- `pdf_path` (str): Caminho para o arquivo PDF
-- `lang` (str): Idioma para OCR (padrão: 'por')
+**Parameters:**
+- `pdf_path` (str): Path to the PDF file
+- `lang` (str): Language for OCR (default: 'eng')
 
-**Retorna:**
-- `List[str]`: Lista com as linhas de texto extraídas
+**Returns:**
+- `List[str]`: List of extracted text lines
 
 ### `extract_images_from_pdf(pdf_path)`
 
-Extrai todas as imagens de um PDF.
+Extracts all images from a PDF.
 
 ### `process_text_lines(text)`
 
-Processa texto bruto do OCR, removendo números e mantendo apenas o conteúdo após "-".
+Processes raw OCR text, removing numbers and keeping only content after "-".
 
-## Configurações de OCR
+## OCR Settings
 
-O script usa as seguintes configurações do Tesseract:
+The script uses the following Tesseract settings:
 - **OEM 3**: LSTM OCR Engine
-- **PSM 6**: Bloco uniforme de texto
-- **Idioma padrão**: Português ('por')
+- **PSM 6**: Uniform block of text
+- **Default language**: English ('eng')
 
-## Tratamento de Erros
+## Error Handling
 
-- ✅ Verifica se o arquivo PDF existe
-- ✅ Trata erros de OCR graciosamente
-- ✅ Pré-processamento de imagem para melhor qualidade
-- ✅ Mensagens informativas durante o processamento
+- ✅ Checks if PDF file exists
+- ✅ Handles OCR errors gracefully
+- ✅ Image preprocessing for better quality
+- ✅ Informative messages during processing
 
-## Limitações
+## Limitations
 
-- Requer Tesseract instalado no sistema
-- Qualidade do OCR depende da resolução e clareza das imagens
-- Funciona melhor com texto em formato de lista numerada
+- Requires Tesseract installed on system
+- OCR quality depends on image resolution and clarity
+- Works best with numbered list format text
 
-## Contribuindo
+## Contributing
 
-Sinta-se livre para abrir issues ou enviar pull requests com melhorias!
+Feel free to open issues or submit pull requests with improvements!
 
-## Licença
+## License
 
 MIT License

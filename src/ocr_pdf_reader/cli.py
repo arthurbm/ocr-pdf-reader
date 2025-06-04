@@ -1,5 +1,5 @@
 """
-Interface de linha de comando para o OCR PDF Reader.
+Command line interface for the OCR PDF Reader.
 """
 
 import argparse
@@ -10,49 +10,49 @@ from .image_processor import check_tesseract_installation
 
 
 def show_installation_help():
-    """Mostra instruções de instalação do Tesseract."""
-    print("AVISO: Tesseract OCR não encontrado!")
-    print("Para instalar:")
-    print("  Ubuntu/Debian: sudo apt install tesseract-ocr tesseract-ocr-por")
-    print("  Windows: baixe de https://github.com/UB-Mannheim/tesseract/wiki")
+    """Shows Tesseract installation instructions."""
+    print("WARNING: Tesseract OCR not found!")
+    print("To install:")
+    print("  Ubuntu/Debian: sudo apt install tesseract-ocr tesseract-ocr-eng")
+    print("  Windows: download from https://github.com/UB-Mannheim/tesseract/wiki")
     print("  macOS: brew install tesseract")
 
 
 def main():
-    """Função principal da CLI."""
+    """Main CLI function."""
     parser = argparse.ArgumentParser(
-        description="Extrai texto de PDFs com imagens usando OCR",
+        description="Extract text from PDFs with images using OCR",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Exemplos de uso:
-  ocr-pdf-reader arquivo.pdf                      # Extrai texto para texto_extraido.txt
-  ocr-pdf-reader arquivo.pdf -o resultado.txt     # Especifica arquivo de saída
-  ocr-pdf-reader arquivo.pdf --lang eng           # Usa inglês para OCR
-  ocr-pdf-reader arquivo.pdf --no-validate        # Não valida linhas extraídas
+Usage examples:
+  ocr-pdf-reader file.pdf                         # Extract text to extracted_text.txt
+  ocr-pdf-reader file.pdf -o result.txt           # Specify output file
+  ocr-pdf-reader file.pdf --lang eng              # Use English for OCR
+  ocr-pdf-reader file.pdf --no-validate           # Don't validate extracted lines
         """
     )
     
     parser.add_argument(
         'pdf_path',
-        help='Caminho para o arquivo PDF'
+        help='Path to the PDF file'
     )
     
     parser.add_argument(
         '-o', '--output',
-        default='texto_extraido.txt',
-        help='Arquivo de saída (padrão: texto_extraido.txt)'
+        default='extracted_text.txt',
+        help='Output file (default: extracted_text.txt)'
     )
     
     parser.add_argument(
         '--lang',
-        default='por',
-        help='Idioma para OCR (padrão: por)'
+        default='eng',
+        help='Language for OCR (default: eng)'
     )
     
     parser.add_argument(
         '--no-validate',
         action='store_true',
-        help='Não valida as linhas extraídas'
+        help='Don\'t validate extracted lines'
     )
     
     parser.add_argument(
@@ -63,25 +63,25 @@ Exemplos de uso:
     
     args = parser.parse_args()
     
-    # Verifica se o Tesseract está instalado
+    # Check if Tesseract is installed
     if not check_tesseract_installation():
         show_installation_help()
         return 1
     
-    # Verifica se o arquivo existe
+    # Check if file exists
     pdf_path = Path(args.pdf_path)
     if not pdf_path.exists():
-        print(f"Erro: Arquivo não encontrado: {args.pdf_path}")
+        print(f"Error: File not found: {args.pdf_path}")
         return 1
     
     try:
         print(f"OCR PDF Reader v1.0.0")
-        print(f"Arquivo: {args.pdf_path}")
-        print(f"Idioma: {args.lang}")
-        print(f"Saída: {args.output}")
+        print(f"File: {args.pdf_path}")
+        print(f"Language: {args.lang}")
+        print(f"Output: {args.output}")
         print("-" * 50)
         
-        # Extrai o texto
+        # Extract text
         text_lines = extract_and_save(
             pdf_path=str(pdf_path),
             output_file=args.output,
@@ -90,59 +90,59 @@ Exemplos de uso:
         )
         
         if text_lines:
-            print(f"\n✅ Sucesso! {len(text_lines)} linhas extraídas.")
-            print(f"Resultado salvo em: {args.output}")
+            print(f"\n✅ Success! {len(text_lines)} lines extracted.")
+            print(f"Result saved to: {args.output}")
             return 0
         else:
-            print("\n❌ Nenhum texto foi extraído.")
+            print("\n❌ No text was extracted.")
             return 1
             
     except FileNotFoundError as e:
-        print(f"Erro: {e}")
+        print(f"Error: {e}")
         return 1
     except Exception as e:
-        print(f"Erro inesperado: {e}")
+        print(f"Unexpected error: {e}")
         return 1
 
 
 def interactive_mode():
-    """Modo interativo para usar sem parâmetros de linha de comando."""
-    print("=== OCR PDF Reader - Modo Interativo ===")
+    """Interactive mode for use without command line parameters."""
+    print("=== OCR PDF Reader - Interactive Mode ===")
     
-    # Verifica Tesseract
+    # Check Tesseract
     if not check_tesseract_installation():
         show_installation_help()
         return
     
-    # Solicita caminho do PDF
-    pdf_path = input("Digite o caminho para o arquivo PDF: ").strip()
+    # Request PDF path
+    pdf_path = input("Enter the path to the PDF file: ").strip()
     
     if not pdf_path:
-        print("Erro: É necessário fornecer o caminho para um arquivo PDF.")
+        print("Error: You must provide the path to a PDF file.")
         return
     
     try:
-        # Extrai o texto
+        # Extract text
         text_lines = extract_and_save(pdf_path)
         
         if text_lines:
             print(f"\n{'='*50}")
-            print(f"TEXTO EXTRAÍDO ({len(text_lines)} linhas):")
+            print(f"EXTRACTED TEXT ({len(text_lines)} lines):")
             print(f"{'='*50}")
             
-            # Mostra primeiras 10 linhas
+            # Show first 10 lines
             for i, line in enumerate(text_lines[:10], 1):
                 print(f"{i:3d}: {line}")
             
             if len(text_lines) > 10:
-                print(f"... e mais {len(text_lines) - 10} linhas")
+                print(f"... and {len(text_lines) - 10} more lines")
             
-            print(f"\nTexto completo salvo em: texto_extraido.txt")
+            print(f"\nComplete text saved to: extracted_text.txt")
         else:
-            print("Nenhum texto foi extraído do PDF.")
+            print("No text was extracted from the PDF.")
             
     except Exception as e:
-        print(f"Erro: {e}")
+        print(f"Error: {e}")
 
 
 if __name__ == "__main__":

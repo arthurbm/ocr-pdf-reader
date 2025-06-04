@@ -1,10 +1,10 @@
 """
-Módulo para processamento de texto extraído via OCR.
+Module for processing text extracted via OCR.
 
-Este módulo contém funções para:
-- Processar texto bruto extraído do OCR
-- Remover códigos numéricos e manter apenas o conteúdo relevante
-- Lidar com linhas quebradas e texto corrido
+This module contains functions for:
+- Processing raw text extracted from OCR
+- Removing numeric codes and keeping only relevant content
+- Handling broken lines and continuous text
 """
 
 import re
@@ -13,60 +13,60 @@ from typing import List
 
 def process_text_lines(text: str) -> List[str]:
     """
-    Processa o texto extraído, removendo códigos numéricos e mantendo apenas o conteúdo após o "-".
-    Lida com códigos no formato "11.01.39 - DESCRIÇÃO" e texto corrido.
-    Mantém as siglas no final das descrições.
+    Processes extracted text, removing numeric codes and keeping only content after "-".
+    Handles codes in format "11.01.39 - DESCRIPTION" and continuous text.
+    Maintains acronyms at the end of descriptions.
     
     Args:
-        text (str): Texto bruto extraído do OCR
+        text (str): Raw text extracted from OCR
         
     Returns:
-        List[str]: Lista de linhas processadas sem os códigos numéricos
+        List[str]: List of processed lines without numeric codes
     """
     processed_lines = []
     
-    # Padrão para códigos no formato "XX.XX.XX - TEXTO" ou "XX.XX - TEXTO" ou "X - TEXTO"
-    # Também aceita códigos com pontos, vírgulas e outros separadores
+    # Pattern for codes in format "XX.XX.XX - TEXT" or "XX.XX - TEXT" or "X - TEXT"
+    # Also accepts codes with dots, commas and other separators
     pattern = r'(\d+(?:[\.\,]\d+)*(?:[\.\,]\d+)*)\s*-\s*([^0-9]+?)(?=\s+\d+(?:[\.\,]\d+)*\s*-|\s*$)'
     
-    # Remove quebras de linha desnecessárias e junta tudo em uma linha
+    # Remove unnecessary line breaks and join everything in one line
     clean_text = ' '.join(text.split())
     
-    # Encontra todas as correspondências
+    # Find all matches
     matches = re.findall(pattern, clean_text)
     
     if matches:
         for code, description in matches:
-            # Limpa a descrição mantendo as siglas no final
+            # Clean description keeping acronyms at the end
             desc_clean = description.strip()
             
-            # Remove apenas parênteses no final, mas mantém as siglas com hífen
+            # Remove only parentheses at the end, but keep acronyms with hyphen
             desc_clean = re.sub(r'\s*\([^)]*\)\s*$', '', desc_clean)
             
-            # Remove o último caractere se não for uma letra
+            # Remove last character if it's not a letter
             desc_clean = remove_non_letter_ending(desc_clean)
             
             if desc_clean and len(desc_clean.strip()) > 2:
                 processed_lines.append(desc_clean.strip())
     else:
-        # Fallback: se o padrão principal não funcionar, tenta padrões mais simples
-        # Divide por códigos que começam com dígitos seguidos de hífen
+        # Fallback: if main pattern doesn't work, try simpler patterns
+        # Split by codes that start with digits followed by hyphen
         parts = re.split(r'\s+(?=\d+[\.\,]\d+.*?-)', text)
         
         for part in parts:
             if '-' in part:
-                # Pega tudo após o primeiro hífen
+                # Take everything after the first hyphen
                 after_dash = part.split('-', 1)[1].strip()
-                # Mantém as siglas, remove apenas parênteses
+                # Keep acronyms, remove only parentheses
                 after_dash = re.sub(r'\s*\([^)]*\)\s*$', '', after_dash)
                 
-                # Remove o último caractere se não for uma letra
+                # Remove last character if it's not a letter
                 after_dash = remove_non_letter_ending(after_dash)
                 
                 if after_dash and len(after_dash.strip()) > 2:
                     processed_lines.append(after_dash.strip())
     
-    # Remove duplicatas mantendo a ordem
+    # Remove duplicates maintaining order
     seen = set()
     unique_lines = []
     for line in processed_lines:
@@ -79,13 +79,13 @@ def process_text_lines(text: str) -> List[str]:
 
 def remove_non_letter_ending(text: str) -> str:
     """
-    Remove o último caractere da string se ele não for uma letra.
+    Removes the last character from string if it's not a letter.
     
     Args:
-        text (str): Texto a ser processado
+        text (str): Text to be processed
         
     Returns:
-        str: Texto com último caractere removido se não for letra
+        str: Text with last character removed if it's not a letter
     """
     if not text:
         return text
@@ -99,18 +99,18 @@ def remove_non_letter_ending(text: str) -> str:
 
 def clean_text(text: str) -> str:
     """
-    Limpa texto básico removendo caracteres indesejados.
+    Basic text cleaning removing unwanted characters.
     
     Args:
-        text (str): Texto a ser limpo
+        text (str): Text to be cleaned
         
     Returns:
-        str: Texto limpo
+        str: Cleaned text
     """
-    # Remove espaços extras
+    # Remove extra spaces
     text = ' '.join(text.split())
     
-    # Remove caracteres de controle
+    # Remove control characters
     text = ''.join(char for char in text if ord(char) >= 32 or char in '\n\t')
     
     return text.strip()
@@ -118,23 +118,23 @@ def clean_text(text: str) -> str:
 
 def validate_extracted_lines(lines: List[str], min_length: int = 3) -> List[str]:
     """
-    Valida e filtra linhas extraídas com base em critérios mínimos.
+    Validates and filters extracted lines based on minimum criteria.
     
     Args:
-        lines (List[str]): Lista de linhas para validar
-        min_length (int): Comprimento mínimo de uma linha válida
+        lines (List[str]): List of lines to validate
+        min_length (int): Minimum length of a valid line
         
     Returns:
-        List[str]: Lista de linhas válidas
+        List[str]: List of valid lines
     """
     valid_lines = []
     
     for line in lines:
-        # Remove espaços e verifica comprimento mínimo
+        # Remove spaces and check minimum length
         clean_line = line.strip()
         
         if len(clean_line) >= min_length:
-            # Verifica se não é apenas números ou caracteres especiais
+            # Check if it's not just numbers or special characters
             if any(char.isalpha() for char in clean_line):
                 valid_lines.append(clean_line)
     

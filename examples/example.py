@@ -1,50 +1,50 @@
 #!/usr/bin/env python3
 """
-Exemplo de uso do OCR PDF Reader
+Usage example of the OCR PDF Reader
 """
 
 from main import extract_text_from_pdf
 
 
-def exemplo_uso():
+def usage_example():
     """
-    Exemplo de como usar o script programaticamente.
+    Example of how to use the script programmatically.
     """
-    # Caminho para o PDF
+    # Path to the PDF
     pdf_path = "./doc.pdf"
     
     try:
-        # Extrai o texto
-        linhas_texto = extract_text_from_pdf(pdf_path, lang='por')
+        # Extract text
+        text_lines = extract_text_from_pdf(pdf_path, lang='eng')
         
-        # Processa o resultado
-        if linhas_texto:
-            print("Texto extraído com sucesso!")
-            print(f"Total de linhas: {len(linhas_texto)}")
+        # Process the result
+        if text_lines:
+            print("Text extracted successfully!")
+            print(f"Total lines: {len(text_lines)}")
             
-            # Exemplo: buscar linhas que contenham uma palavra específica
-            palavra_busca = "exemplo"
-            linhas_filtradas = [linha for linha in linhas_texto if palavra_busca.lower() in linha.lower()]
+            # Example: search for lines containing a specific word
+            search_word = "example"
+            filtered_lines = [line for line in text_lines if search_word.lower() in line.lower()]
             
-            if linhas_filtradas:
-                print(f"\nLinhas contendo '{palavra_busca}':")
-                for linha in linhas_filtradas:
-                    print(f"- {linha}")
+            if filtered_lines:
+                print(f"\nLines containing '{search_word}':")
+                for line in filtered_lines:
+                    print(f"- {line}")
             
-            # Retorna o array de strings
-            return linhas_texto
+            # Return the array of strings
+            return text_lines
         else:
-            print("Nenhum texto foi extraído.")
+            print("No text was extracted.")
             return []
             
     except Exception as e:
-        print(f"Erro: {e}")
+        print(f"Error: {e}")
         return []
 
 
 if __name__ == "__main__":
-    resultado = exemplo_uso()
+    result = usage_example()
     
-    # O resultado é um array de strings com o texto extraído
-    print(f"\nTipo do resultado: {type(resultado)}")
-    print(f"Número de elementos: {len(resultado)}") 
+    # The result is an array of strings with the extracted text
+    print(f"\nResult type: {type(result)}")
+    print(f"Number of elements: {len(result)}") 

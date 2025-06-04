@@ -1,7 +1,7 @@
 """
-Módulo principal do OCR PDF Reader.
+Main module of the OCR PDF Reader.
 
-Este módulo integra todas as funcionalidades para extrair texto de PDFs contendo imagens.
+This module integrates all functionalities to extract text from PDFs containing images.
 """
 
 from typing import List
@@ -9,63 +9,63 @@ from .image_processor import extract_images_from_pdf, extract_text_from_image
 from .text_processor import process_text_lines, validate_extracted_lines
 
 
-def extract_text_from_pdf(pdf_path: str, lang: str = 'por', validate: bool = True) -> List[str]:
+def extract_text_from_pdf(pdf_path: str, lang: str = 'eng', validate: bool = True) -> List[str]:
     """
-    Função principal que extrai texto de um PDF contendo imagens.
+    Main function that extracts text from a PDF containing images.
     
     Args:
-        pdf_path (str): Caminho para o arquivo PDF
-        lang (str): Idioma para o OCR (padrão: 'por' para português)
-        validate (bool): Se deve validar as linhas extraídas (padrão: True)
+        pdf_path (str): Path to the PDF file
+        lang (str): Language for OCR (default: 'eng' for English)
+        validate (bool): Whether to validate extracted lines (default: True)
     
     Returns:
-        List[str]: Lista com as linhas de texto extraídas (sem os números)
+        List[str]: List of extracted text lines (without numbers)
         
     Raises:
-        FileNotFoundError: Se o arquivo PDF não for encontrado
+        FileNotFoundError: If the PDF file is not found
     """
-    print(f"Extraindo imagens do PDF: {pdf_path}")
+    print(f"Extracting images from PDF: {pdf_path}")
     images = extract_images_from_pdf(pdf_path)
     
     if not images:
-        print("Nenhuma imagem encontrada no PDF.")
+        print("No images found in the PDF.")
         return []
     
-    print(f"Encontradas {len(images)} imagem(ns). Aplicando OCR...")
+    print(f"Found {len(images)} image(s). Applying OCR...")
     
     all_text_lines = []
     
     for i, image in enumerate(images):
-        print(f"Processando imagem {i+1}/{len(images)}...")
+        print(f"Processing image {i+1}/{len(images)}...")
         
-        # Extrai texto da imagem
+        # Extract text from image
         raw_text = extract_text_from_image(image, lang)
         
         if raw_text:
-            # Processa o texto para extrair apenas o conteúdo relevante
+            # Process text to extract only relevant content
             processed_lines = process_text_lines(raw_text)
             all_text_lines.extend(processed_lines)
     
-    # Valida as linhas se solicitado
+    # Validate lines if requested
     if validate:
         all_text_lines = validate_extracted_lines(all_text_lines)
     
     return all_text_lines
 
 
-def extract_and_save(pdf_path: str, output_file: str = "texto_extraido.txt", 
-                    lang: str = 'por', validate: bool = True) -> List[str]:
+def extract_and_save(pdf_path: str, output_file: str = "extracted_text.txt", 
+                    lang: str = 'eng', validate: bool = True) -> List[str]:
     """
-    Extrai texto de um PDF e salva em arquivo.
+    Extracts text from a PDF and saves to file.
     
     Args:
-        pdf_path (str): Caminho para o arquivo PDF
-        output_file (str): Nome do arquivo de saída
-        lang (str): Idioma para o OCR
-        validate (bool): Se deve validar as linhas extraídas
+        pdf_path (str): Path to the PDF file
+        output_file (str): Output file name
+        lang (str): Language for OCR
+        validate (bool): Whether to validate extracted lines
         
     Returns:
-        List[str]: Lista com as linhas de texto extraídas
+        List[str]: List of extracted text lines
     """
     text_lines = extract_text_from_pdf(pdf_path, lang, validate)
     
@@ -74,6 +74,6 @@ def extract_and_save(pdf_path: str, output_file: str = "texto_extraido.txt",
             for line in text_lines:
                 f.write(line + '\n')
         
-        print(f"Texto salvo em: {output_file}")
+        print(f"Text saved to: {output_file}")
     
     return text_lines 

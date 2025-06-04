@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Teste com o formato real do PDF do usuário
+Test with real PDF format from user
 """
 
 import sys
 import os
 
-# Adiciona o diretório src ao path para importar os módulos
+# Add src directory to path to import modules
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from ocr_pdf_reader.text_processor import process_text_lines
@@ -14,77 +14,77 @@ from ocr_pdf_reader.text_processor import process_text_lines
 
 def test_real_format():
     """
-    Testa o processamento com o formato real do PDF.
+    Tests processing with real PDF format.
     """
-    # Simula parte do texto real extraído do PDF
-    texto_real = """11.01.39 - INSTITUTO DE ESTUDOS DA AFRICA - GR 11.01.42 - COORDENAÇÃO ADMINISTRATIVA - GR 11.01.55 - DIVISÃO DE ANÁLISE DE PROCESSOS - GR 11.01.56 - DIVISÃO DE PROTOCOLO - GR 11.01.84 - DIVISÃO DE ANÁLISE E ACOMPANHAMENTO DE CONTRATOS E CONVÊNIOS - GR 11.01,44 - DIVISÃO DE APOIO À TECNOLOGIA DA INFORMAÇÃO - GR 11.01.45 - OFICINA DE INFORMATICA - GR 11.01.46 - SERVICO DE TRANSPORTE DA REITORIA 11.01.48 - SECRETARIA DE PROGRAMAS DE EDUCAÇÃO ABERTA E DIGITAL - GR"""
+    # Simulate part of the real text extracted from PDF
+    real_text = """11.01.39 - INSTITUTE OF AFRICAN STUDIES - GR 11.01.42 - ADMINISTRATIVE COORDINATION - GR 11.01.55 - PROCESS ANALYSIS DIVISION - GR 11.01.56 - PROTOCOL DIVISION - GR 11.01.84 - CONTRACT AND AGREEMENT ANALYSIS AND MONITORING DIVISION - GR 11.01,44 - INFORMATION TECHNOLOGY SUPPORT DIVISION - GR 11.01.45 - COMPUTER WORKSHOP - GR 11.01.46 - RECTORY TRANSPORTATION SERVICE 11.01.48 - SECRETARIAT OF OPEN AND DIGITAL EDUCATION PROGRAMS - GR"""
     
-    print("TEXTO ORIGINAL (formato real):")
+    print("ORIGINAL TEXT (real format):")
     print("=" * 60)
-    print(texto_real[:200] + "...")
+    print(real_text[:200] + "...")
     
-    # Processa o texto
-    linhas_processadas = process_text_lines(texto_real)
+    # Process the text
+    processed_lines = process_text_lines(real_text)
     
-    print(f"\nTEXTO PROCESSADO ({len(linhas_processadas)} linhas):")
+    print(f"\nPROCESSED TEXT ({len(processed_lines)} lines):")
     print("=" * 60)
-    for i, linha in enumerate(linhas_processadas[:10], 1):  # Mostra apenas as primeiras 10
-        print(f"{i:2d}: {linha}")
+    for i, line in enumerate(processed_lines[:10], 1):  # Show only first 10
+        print(f"{i:2d}: {line}")
     
-    if len(linhas_processadas) > 10:
-        print(f"... e mais {len(linhas_processadas) - 10} linhas")
+    if len(processed_lines) > 10:
+        print(f"... and {len(processed_lines) - 10} more lines")
     
-    return linhas_processadas
+    return processed_lines
 
 
 def test_with_actual_file():
     """
-    Testa com o arquivo real extraído.
+    Tests with real extracted file.
     """
     print("\n" + "=" * 60)
-    print("TESTANDO COM ARQUIVO REAL")
+    print("TESTING WITH REAL FILE")
     print("=" * 60)
     
     try:
-        with open('texto_extraido.txt', 'r', encoding='utf-8') as f:
-            texto_completo = f.read()
+        with open('extracted_text.txt', 'r', encoding='utf-8') as f:
+            complete_text = f.read()
         
-        # Processa o texto
-        linhas_processadas = process_text_lines(texto_completo)
+        # Process the text
+        processed_lines = process_text_lines(complete_text)
         
-        print(f"Total de linhas processadas: {len(linhas_processadas)}")
-        print("\nPrimeiras 10 linhas processadas:")
+        print(f"Total processed lines: {len(processed_lines)}")
+        print("\nFirst 10 processed lines:")
         print("-" * 40)
         
-        for i, linha in enumerate(linhas_processadas[:10], 1):
-            print(f"{i:2d}: {linha}")
+        for i, line in enumerate(processed_lines[:10], 1):
+            print(f"{i:2d}: {line}")
         
-        if len(linhas_processadas) > 10:
-            print(f"\n... e mais {len(linhas_processadas) - 10} linhas")
+        if len(processed_lines) > 10:
+            print(f"\n... and {len(processed_lines) - 10} more lines")
         
-        # Salva o resultado processado
-        with open('resultado_corrigido.txt', 'w', encoding='utf-8') as f:
-            for linha in linhas_processadas:
-                f.write(linha + '\n')
+        # Save the processed result
+        with open('corrected_result.txt', 'w', encoding='utf-8') as f:
+            for line in processed_lines:
+                f.write(line + '\n')
         
-        print(f"\n✅ Resultado salvo em 'resultado_corrigido.txt'")
-        return linhas_processadas
+        print(f"\n✅ Result saved to 'corrected_result.txt'")
+        return processed_lines
         
     except FileNotFoundError:
-        print("❌ Arquivo 'texto_extraido.txt' não encontrado!")
+        print("❌ File 'extracted_text.txt' not found!")
         return []
 
 
 if __name__ == "__main__":
-    print("🧪 TESTANDO PROCESSAMENTO COM FORMATO REAL")
+    print("🧪 TESTING PROCESSING WITH REAL FORMAT")
     print("=" * 60)
     
-    # Teste com amostra
-    linhas_amostra = test_real_format()
+    # Test with sample
+    sample_lines = test_real_format()
     
-    # Teste com arquivo completo
-    linhas_completo = test_with_actual_file()
+    # Test with complete file
+    complete_lines = test_with_actual_file()
     
-    print(f"\n✅ Teste concluído!")
-    print(f"Amostra: {len(linhas_amostra)} linhas")
-    print(f"Arquivo completo: {len(linhas_completo)} linhas") 
+    print(f"\n✅ Test completed!")
+    print(f"Sample: {len(sample_lines)} lines")
+    print(f"Complete file: {len(complete_lines)} lines") 

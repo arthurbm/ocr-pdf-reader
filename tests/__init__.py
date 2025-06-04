@@ -1,3 +1,3 @@
 """
-Testes para o OCR PDF Reader.
+Tests for the OCR PDF Reader.
 """ 

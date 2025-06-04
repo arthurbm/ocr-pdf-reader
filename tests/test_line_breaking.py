@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Teste da funcionalidade de processamento de linhas quebradas
+Test of broken line processing functionality
 """
 
 import sys
 import os
 
-# Adiciona o diretório src ao path para importar os módulos
+# Add src directory to path to import modules
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from ocr_pdf_reader.text_processor import process_text_lines
@@ -14,94 +14,94 @@ from ocr_pdf_reader.text_processor import process_text_lines
 
 def test_line_breaking():
     """
-    Testa o processamento de linhas quebradas.
+    Tests broken line processing.
     """
-    # Simula texto extraído do OCR com linhas quebradas
-    texto_ocr = """
-1 - Este é o primeiro item que pode ter
-uma linha muito longa que foi quebrada
-pelo OCR em múltiplas linhas
-2 - Este é o segundo item que também
-pode estar quebrado em várias linhas
-conforme extraído pelo OCR
-3 - Terceiro item curto
-4 - Quarto item que novamente tem uma
-linha bem longa que pode ser quebrada
-quando o OCR processa a imagem
-5 - Quinto e último item
+    # Simulate OCR extracted text with broken lines
+    ocr_text = """
+1 - This is the first item which can have
+a very long line that was broken
+by OCR into multiple lines
+2 - This is the second item which can also
+be broken into several lines
+as extracted by OCR
+3 - Third short item
+4 - Fourth item which again has a
+very long line that can be broken
+when OCR processes the image
+5 - Fifth and last item
 """
     
-    print("TEXTO ORIGINAL (simulando OCR):")
+    print("ORIGINAL TEXT (simulating OCR):")
     print("=" * 50)
-    print(texto_ocr)
+    print(ocr_text)
     
-    # Processa o texto
-    linhas_processadas = process_text_lines(texto_ocr)
+    # Process the text
+    processed_lines = process_text_lines(ocr_text)
     
-    print("\nTEXTO PROCESSADO:")
+    print("\nPROCESSED TEXT:")
     print("=" * 50)
-    for i, linha in enumerate(linhas_processadas, 1):
-        print(f"{i}: {linha}")
+    for i, line in enumerate(processed_lines, 1):
+        print(f"{i}: {line}")
     
-    return linhas_processadas
+    return processed_lines
 
 
 def test_edge_cases():
     """
-    Testa casos especiais de formatação.
+    Tests special formatting cases.
     """
     print("\n" + "=" * 60)
-    print("TESTANDO CASOS ESPECIAIS")
+    print("TESTING SPECIAL CASES")
     print("=" * 60)
     
-    # Teste 1: Números sem traço
-    texto1 = """
-1 Primeiro item sem traço
-continuação da primeira linha
-2 Segundo item sem traço
+    # Test 1: Numbers without dash
+    text1 = """
+1 First item without dash
+continuation of first line
+2 Second item without dash
 """
-    print("\nTeste 1 - Números sem traço:")
-    print("Entrada:", repr(texto1))
-    resultado1 = process_text_lines(texto1)
-    print("Resultado:", resultado1)
+    print("\nTest 1 - Numbers without dash:")
+    print("Input:", repr(text1))
+    result1 = process_text_lines(text1)
+    print("Result:", result1)
     
-    # Teste 2: Formatação mista
-    texto2 = """
-1. - Item com ponto e traço
-continuação desta linha
-2) Item com parênteses
-mas sem traço
-3 - Item normal com traço
-e sua continuação
+    # Test 2: Mixed formatting
+    text2 = """
+1. - Item with dot and dash
+continuation of this line
+2) Item with parentheses
+but without dash
+3 - Normal item with dash
+and its continuation
 """
-    print("\nTeste 2 - Formatação mista:")
-    print("Entrada:", repr(texto2))
-    resultado2 = process_text_lines(texto2)
-    print("Resultado:", resultado2)
+    print("\nTest 2 - Mixed formatting:")
+    print("Input:", repr(text2))
+    result2 = process_text_lines(text2)
+    print("Result:", result2)
     
-    # Teste 3: Linhas em branco e espaços
-    texto3 = """
-1 - Primeiro item
+    # Test 3: Blank lines and spaces
+    text3 = """
+1 - First item
 
-continuação após linha em branco
+continuation after blank line
 
-2 - Segundo item
-   com espaços extras
-      e indentação
-3 - Terceiro item
+2 - Second item
+   with extra spaces
+      and indentation
+3 - Third item
 """
-    print("\nTeste 3 - Linhas em branco e espaços:")
-    print("Entrada:", repr(texto3))
-    resultado3 = process_text_lines(texto3)
-    print("Resultado:", resultado3)
+    print("\nTest 3 - Blank lines and spaces:")
+    print("Input:", repr(text3))
+    result3 = process_text_lines(text3)
+    print("Result:", result3)
 
 
 if __name__ == "__main__":
-    # Executa os testes
-    print("🧪 TESTANDO PROCESSAMENTO DE LINHAS QUEBRADAS")
+    # Run tests
+    print("🧪 TESTING BROKEN LINE PROCESSING")
     print("=" * 60)
     
-    linhas = test_line_breaking()
+    lines = test_line_breaking()
     test_edge_cases()
     
-    print(f"\n✅ Teste concluído! Total de linhas processadas: {len(linhas)}") 
+    print(f"\n✅ Test completed! Total processed lines: {len(lines)}") 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Teste específico para a funcionalidade de remoção do último caractere não-alfabético.
+Specific test for the functionality of removing the last non-alphabetic character.
 """
 
 import sys
 import os
 
-# Adiciona o diretório src ao path para importar os módulos
+# Add src directory to path to import modules
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from ocr_pdf_reader.text_processor import process_text_lines
@@ -14,55 +14,55 @@ from ocr_pdf_reader.text_processor import process_text_lines
 
 def test_remove_ending_in_real_context():
     """
-    Testa a remoção do último caractere em contexto real com códigos.
+    Tests removal of last character in real context with codes.
     """
-    # Simula texto extraído do OCR com caracteres não-alfabéticos no final
-    texto_com_problemas = """
-11.01.39 - INSTITUTO DE ESTUDOS DA AFRICA - GR]
-11.01.42 - COORDENAÇÃO ADMINISTRATIVA - GR1
-11.01.55 - DIVISÃO DE ANÁLISE DE PROCESSOS - GR.
-11.01.56 - DIVISÃO DE PROTOCOLO - CCsA)
-11.01.84 - SECRETARIA DE PROGRAMAS - PROGEPE2
+    # Simulate OCR extracted text with non-alphabetic characters at the end
+    problematic_text = """
+11.01.39 - INSTITUTE OF AFRICAN STUDIES - GR]
+11.01.42 - ADMINISTRATIVE COORDINATION - GR1
+11.01.55 - PROCESS ANALYSIS DIVISION - GR.
+11.01.56 - PROTOCOL DIVISION - CCsA)
+11.01.84 - PROGRAM SECRETARIAT - PROGEPE2
 """
     
-    print("TEXTO ORIGINAL (com caracteres problemáticos no final):")
+    print("ORIGINAL TEXT (with problematic characters at the end):")
     print("=" * 60)
-    for linha in texto_com_problemas.strip().split('\n'):
-        if linha.strip():
-            print(f"'{linha.strip()}'")
+    for line in problematic_text.strip().split('\n'):
+        if line.strip():
+            print(f"'{line.strip()}'")
     
-    # Processa o texto
-    result = process_text_lines(texto_com_problemas)
+    # Process the text
+    result = process_text_lines(problematic_text)
     
-    print("\nTEXTO PROCESSADO (caracteres problemáticos removidos):")
+    print("\nPROCESSED TEXT (problematic characters removed):")
     print("=" * 60)
-    for i, linha in enumerate(result, 1):
-        print(f"{i:2d}: '{linha}'")
+    for i, line in enumerate(result, 1):
+        print(f"{i:2d}: '{line}'")
     
-    # Verificações
+    # Verifications
     expected_endings = ['GR', 'GR', 'GR', 'CCsA', 'PROGEPE']
     
-    print("\nVERIFICAÇÕES:")
+    print("\nVERIFICATIONS:")
     print("-" * 30)
     
-    for i, linha in enumerate(result):
+    for i, line in enumerate(result):
         if i < len(expected_endings):
             expected_end = expected_endings[i]
-            if linha.endswith(expected_end):
-                print(f"✅ Linha {i+1}: Termina corretamente com '{expected_end}'")
+            if line.endswith(expected_end):
+                print(f"✅ Line {i+1}: Correctly ends with '{expected_end}'")
             else:
-                print(f"❌ Linha {i+1}: Deveria terminar com '{expected_end}', mas termina com '{linha[-10:]}'")
+                print(f"❌ Line {i+1}: Should end with '{expected_end}', but ends with '{line[-10:]}'")
         
-        # Verifica se o último caractere é uma letra
-        if linha and linha[-1].isalpha():
-            print(f"✅ Linha {i+1}: Último caractere '{linha[-1]}' é uma letra")
+        # Check if last character is a letter
+        if line and line[-1].isalpha():
+            print(f"✅ Line {i+1}: Last character '{line[-1]}' is a letter")
         else:
-            print(f"❌ Linha {i+1}: Último caractere '{linha[-1] if linha else 'N/A'}' não é uma letra")
+            print(f"❌ Line {i+1}: Last character '{line[-1] if line else 'N/A'}' is not a letter")
     
     return result
 
 
 if __name__ == "__main__":
-    print("=== TESTE: Remoção de Caracteres Não-Alfabéticos no Final ===\n")
+    print("=== TEST: Removal of Non-Alphabetic Characters at End ===\n")
     test_remove_ending_in_real_context()
-    print("\n=== FIM DO TESTE ===") 
+    print("\n=== END OF TEST ===") 
